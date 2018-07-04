@@ -71,7 +71,9 @@ While the map show high consumption in Riyadh we still not sure if that consumbt
 
 ```{r echo=FALSE, fig.height=12, fig.width=12, warning=FALSE, dev='Cairo_svg'}
 
-region <- readRDS("region.rds")
+region <- c("Ar Riyad","Makkah", "Madinah", "Al Quassim", "Ash Sharqiyah", "Asir",
+            "Tabuk", "Ha'il", "Al Hudud ash Shamaliyah", "Jizan", "Najran",
+            "Al Bahah", "Al Jawaf")
 ratio <- readRDS("ratio.rds")
 df1 <- data.frame(grp=as.character(region),
                   img=rep("./picto.png",13),
