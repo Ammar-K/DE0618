@@ -31,9 +31,9 @@ library(tidyr)
 # Introduction
 
 `r newthought('In this brief report')`, I'll try to give an idea about the water consumption in Saudi Arabia.
-The data in this report taken from the Ministry of Environment ,Water and Agriculture open data^[[Ministry of Environment ,Water and Agriculture](https://www.mewa.gov.sa/en/InformationCenter/OpenData/Pages/Home.aspx)]
+The data in this report taken from the Ministry of Environment, Water and Agriculture open data^[[Ministry of Environment, Water and Agriculture](https://www.mewa.gov.sa/en/InformationCenter/OpenData/Pages/Home.aspx)]
 
-The issue of water consumpition pose a significant challange as Saudi is a water-scarce country^[[World Resources Institute](http://www.wri.org/blog/2013/12/world%E2%80%99s-36-most-water-stressed-countries)].
+The issue of water consumption poses a significant challenge as Saudi is a water-scarce country^[[World Resources Institute](http://www.wri.org/blog/2013/12/world%E2%80%99s-36-most-water-stressed-countries)].
 
 ## Water Consumption by Region in Million (2016 Data)
 
