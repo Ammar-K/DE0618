@@ -1,0 +1,114 @@
+---
+title: "Water Consumption in Saudi Arabia"
+subtitle: ""
+author:  <a href="https://neo-reliability.com">Ammar Alkhaldi</a>
+date: "`r Sys.Date()`"
+output:
+  tufte::tufte_html: default
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+bibliography: skeleton.bib
+link-citations: yes
+---
+
+```{r setup, include=FALSE}
+library(tufte)
+# invalidate cache when the tufte version changes
+knitr::opts_chunk$set(tidy = FALSE, cache.extra = packageVersion('tufte'))
+options(htmltools.dir.version = FALSE)
+library(readxl)
+library(dplyr)
+library(highcharter)
+library(ggplot2)
+library(ggimage)
+library(tidyr)
+```
+
+# Introduction
+
+`r newthought('In this brief report')`, I'll try to give an idea about the water consumption in Saudi Arabia.
+The data in this report taken from the Ministry of Environment ,Water and Agriculture open data^[[Ministry of Environment ,Water and Agriculture](https://www.mewa.gov.sa/en/InformationCenter/OpenData/Pages/Home.aspx)]
+
+The issue of water consumpition pose a significant challange as Saudi is a water-scarce country^[[World Resources Institute](http://www.wri.org/blog/2013/12/world%E2%80%99s-36-most-water-stressed-countries)].
+
+## Water Consumption by Region in Million (2016 Data)
+
+The map consumption in Million $m^3$.
+We can see that Riyadh consume the majority of the produced water.
+
+
+```{r, echo=FALSE}
+mapdata <- get_data_from_map(download_map_data("countries/sa/sa-all"))
+
+
+
+map <-read_excel("table8-4_2.xlsx", 
+                 sheet = "Sheet2")
+
+hc <- hcmap("countries/sa/sa-all", data = map, value = "value",
+      joinBy = c("hc-a2", "code"), name = "Water Consumption in Million",
+      dataLabels = list(enabled = TRUE, format = '{point.name}'),
+      borderColor = "#FAFAFA", borderWidth = 0.1,
+      tooltip = list(valueDecimals = 2, valuePrefix = "", valueSuffix = "m³"))
+
+hc_colorAxis(hc, minColor = "#f3eded", maxColor = "#aa530e")
+
+```
+
+While the map show high consumption in Riyadh we still not sure if that consumbtion was due to the high population or not, to have a deeper understanding the water consumbution will be done per capita.
+
+# Consumption per Captia per Day {.no-padding}
+
+`r newthought('By looking to the figure below')`, We can see the variance in the water consumpition between different regions, for example the average water usage in eastren region is 4X times the water consumpition in Asir.
+
+
+
+
+
+```{r echo=FALSE, fig.height=12, fig.width=12, warning=FALSE, dev='Cairo_svg'}
+
+region <- readRDS("region.rds")
+ratio <- readRDS("ratio.rds")
+df1 <- data.frame(grp=as.character(region),
+                  img=rep("./picto.png",13),
+                  freq=as.numeric(ratio))
+df1 <- arrange(df1,freq)
+df1$y <- 13:1
+
+df3 <- df1[rep(seq_len(nrow(df1)), df1$freq), c(1,2,4)]
+df3 <- df3 %>% group_by(grp) %>% mutate(x = row_number())
+
+ggplot(df3) +
+  geom_image(aes(x=x, y=y, image=img),size=.06) +
+  theme_void() +
+  geom_text(data=df1, aes(y=y+0.2, label=freq), x=-0.3, 
+            fontface=2, size=10, color="#F26821") +
+  geom_text(data=df1, aes(y=y-.25, label=grp), x=-0.3, 
+            fontface=2, size= 8,family= "Garamond") +
+  xlim(-1,max(df1$freq)+2) + ylim(0,max(df1$y)+1)+
+  geom_rect(aes(xmin = 2.5, xmax = 6, ymin = 11.5, ymax = 13.5),
+            fill = "transparent", color = "black", size = 1.5) +
+  geom_image(aes(x=3,y=12.5, image=img))+
+  geom_text(aes(x=4.6, y=12.5,
+                label="= 108 (baseline)"),
+            size= 10,
+            color="#636363",
+            family= "Garamond")+
+  geom_hline(yintercept = seq(1.5,11.5,1),linetype = 5, size= 0.5)+
+  geom_segment(x=-2,xend=2.5,y=12.5,yend=12.5,linetype = 5, size= 0.5)+
+  labs(title = "Daily Water Consumpition Per Capita (L/day)")+
+  theme(plot.background = element_rect(fill = "#fffff8"),
+        text=element_text(size=21 ,family="Garamond"))
+
+```
+
+
+
+```{r bib, include=FALSE}
+# create a bib file for the R packages used in this document
+knitr::write_bib(c('base', 'rmarkdown'), file = 'skeleton.bib')
+```
