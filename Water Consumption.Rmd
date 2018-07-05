@@ -83,13 +83,14 @@ df1$y <- 13:1
 
 df3 <- df1[rep(seq_len(nrow(df1)), df1$freq), c(1,2,4)]
 df3 <- df3 %>% group_by(grp) %>% mutate(x = row_number())
+df3$x <- df3$x + 1
 
 ggplot(df3) +
   geom_image(aes(x=x, y=y, image=img),size=.06) +
   theme_void() +
-  geom_text(data=df1, aes(y=y+0.2, label=freq), x=-0.3, 
+  geom_text(data=df1, aes(y=y+0.2, label=freq), x=-0.1, 
             fontface=2, size=10, color="#F26821") +
-  geom_text(data=df1, aes(y=y-.25, label=grp), x=-0.3, 
+  geom_text(data=df1, aes(y=y-.25, label=grp), x=-0.1, 
             fontface=2, size= 8,family= "Garamond") +
   xlim(-1,max(df1$freq)+2) + ylim(0,max(df1$y)+1)+
   geom_rect(aes(xmin = 2.5, xmax = 6, ymin = 11.5, ymax = 13.5),
